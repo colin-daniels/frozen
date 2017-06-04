@@ -18,6 +18,12 @@ matrix:
           osx_image: xcode8.3
           env: CXX_COMPILER=clang++
 
-script:
-  - make -C tests check CXX=${CXX_COMPILER}
+before_script:
+    - mkdir -p build
+    - cd build
 
+script:
+    - CXX=${CXX_COMPILER} cmake -DCMAKE_BUILD_TYPE=Debug ..
+    - make -j 2
+    # run tests
+    - CTEST_OUTPUT_ON_FAILURE=1 make test
