@@ -41,18 +41,11 @@ auto constexpr next_highest_power_of_two(std::size_t v) {
   return v;
 }
 
-template <
-  class T, std::size_t N, class Iter, std::size_t... I,
-  class = std::enable_if_t<
-    std::is_same<
-      std::random_access_iterator_tag,
-      typename std::iterator_traits<Iter>::iterator_category
-    >::value
-  >
->
+template <class T, std::size_t N, class Iter, std::size_t... I>
 constexpr std::array<T, N> make_unordered_array(Iter &iter,
-                                              std::index_sequence<I...>) {
-  return {{*(iter + I)...}};
+                                                std::index_sequence<I...>) {
+  // the sequencing order here is guaranteed by section 8.5.4 of the standard
+  return {{((void)I, *iter++)...}};
 }
 
 template <class T, std::size_t N>
